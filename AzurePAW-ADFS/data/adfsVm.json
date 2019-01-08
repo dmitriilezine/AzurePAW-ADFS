@@ -207,16 +207,7 @@
             "name": "[concat(parameters('vmName'), '0','-osdisk')]",
             "caching": "ReadWrite",
             "createOption": "FromImage"
-          },
-          "dataDisks": [
-            {
-              "name": "[concat(parameters('vmName'), '0','-data-disk1')]",
-              "createOption": "Empty",
-              "caching": "None",
-              "diskSizeGB": "[parameters('dataDiskSize')]",
-              "lun": 0
-            }
-          ]
+          }
         },
         "diagnosticsProfile": {
           "bootDiagnostics": {
