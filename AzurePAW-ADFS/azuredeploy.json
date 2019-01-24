@@ -23,6 +23,19 @@
       },
       "defaultValue": "[concat('Subscription#',subscription().subscriptionId)]"
     },
+    "adfsSVCname": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the ADFS Service Account"
+      },
+      "defaultValue": "adfs-svc"
+    },
+    "adfsSVCPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The password for the ADFS Service account"
+      }
+    },
     "existingVirtualNetworkName": {
       "type": "string",
       "defaultValue": "Add existing vNet Name where this deployment will be deployed to",
@@ -431,6 +444,12 @@
           "adminPassword": {
             "value": "[parameters('adminPassword')]"
           },
+          "adfsSVCname": {
+            "value": "[parameters('adfsSVCname')]"
+          },
+          "adfsSVCPassword": {
+            "value": "[parameters('adfsSVCPassword')]"
+          },
           "assetLocationStorageAccount": {
             "value": "[variables('assetLocationStorageAccount')]"
           },
@@ -489,6 +508,12 @@
           },
           "adminPassword": {
             "value": "[parameters('adminPassword')]"
+          },
+          "adfsSVCname": {
+            "value": "[parameters('adfsSVCname')]"
+          },
+          "adfsSVCPassword": {
+            "value": "[parameters('adfsSVCPassword')]"
           },
           "assetLocationStorageAccount": {
             "value": "[variables('assetLocationStorageAccount')]"

@@ -32,6 +32,19 @@
         "description": "The password for the Administrator account of the new VMs and Domain"
       }
     },
+    "adfsSVCname": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the ADFS Service Account"
+      }
+    },
+    "adfsSVCPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The password for the ADFS service account"
+      }
+    },
+
     "assetLocationStorageAccount": {
       "type": "string",
       "metadata": {
@@ -103,14 +116,15 @@
               "password": "PrivateSettingsRef:adminPassword"
             },
             "AdfsSvcCreds": {
-              "userName": "svc-ADFS",
-              "password": "PrivateSettingsRef:adminPassword"
+              "userName": "[parameters('adfsSVCname')]",
+              "password": "PrivateSettingsRef:adfsSVCPassword"
             }
           }
         },
         "protectedSettings": {
           "items": {
             "adminPassword": "[parameters('adminPassword')]",
+            "adfsSVCPassword": "[parameters('adfsSVCPassword')]",
             "configurationUrlSasToken": "[parameters('storageAccountSASTokenviaKeyvault')]"
           }
         }
