@@ -170,13 +170,40 @@
       "metadata": {
         "description": "ADE Key Vault RG"
       }
+    },
+    "AzurePAWPOC1SAKey2": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the secret in the Secrets Key Vault which contains key for SA"
+      },
+      "defaultValue": "AzurePAWPOC1SAKey2"
+    },
+    "AzurePAWPOC1SAS": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the secret in the Secrets Key Vault which contains SAS for SA"
+      },
+      "defaultValue": "AzurePAWPOC1SAS"
+    },
+    "adfsAvailabiltySet": {
+      "type": "string",
+      "metadata": {
+        "description": "Availability Set name for ADFS servers"
+      },
+      "defaultValue": "adfsAvailabiltySet"
+    },
+    "ilbADFSName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name for ADFS ILB"
+      },
+      "defaultValue": "ilbADFSName"
     }
   },
   "variables": {
     "assetLocation": "https://raw.githubusercontent.com/dmitriilezine/AzurePAW-ADFS/master/AzurePAW-ADFS",
     "assetLocationStorageAccount": "[parameters('ScriptsLocation')]",
     "VMSize": "[parameters('VirtualMachineSize')]",
-    "OSVersion": "2016-Datacenter",
 
     "ADFSsubnetID": "[resourceId(parameters('existingVirtualNetworkResourceGroup'), 'Microsoft.Network/virtualNetworks/subnets', parameters('existingVirtualNetworkName'), parameters('ADFSubnetName'))]",
 
@@ -198,7 +225,7 @@
     "deployILBforADFS": "DeployILBforADFS",
     "deployILBforADFSId": "[concat('Microsoft.Resources/deployments/', variables('deployILBforADFS'))]",
 
-    "adfsVmDeployment": "CreateADFSVM",
+    "adfsVmDeployment": "CreateADFSVM1",
     "adfsVmDeploymentId": "[concat('Microsoft.Resources/deployments/', variables('adfsVmDeployment'))]",
     "adfsVm2Deployment": "CreateADFSVM2",
     "adfsVm2DeploymentId": "[concat('Microsoft.Resources/deployments/', variables('adfsVm2Deployment'))]",
@@ -227,7 +254,6 @@
     "domainSuffix": "[split(parameters('domainName'),'.')[1]]",
     "ouPathT0Devices": "[concat('OU=T0-Devices; OU=Tier 0; OU=Admin;', 'DC=',variables('shortDomainName'),'; DC=',variables('domainSuffix'))]",
     "ouPathAdmin": "[concat('OU=Admin;', 'DC=',variables('shortDomainName'),'; DC=',variables('domainSuffix'))]",
-    "ouPathHGS": "[concat('OU=T0-HGS; OU=T0-Servers; OU=Tier 0; OU=Admin;', 'DC=',variables('shortDomainName'),'; DC=',variables('domainSuffix'))]",
     "ouPathT0Idenity": "[concat('OU=T0-Identity; OU=T0-Servers; OU=Tier 0; OU=Admin;', 'DC=',variables('shortDomainName'),'; DC=',variables('domainSuffix'))]",
     "ouPathNone": "",
 
@@ -235,25 +261,25 @@
     "configurationFunctionDSConADFSvm2": "DeployADFS.ps1\\InstallADFSFarmonADFSvm2",
 
     "secretsVaultName": "[parameters('secretsVaultName')]",
-    "secretName": "AzurePAWPOC1SAKey2",
-    "secretnameSASurl": "AzurePAWPOC1SAS",
+    "secretName": "[parameters('AzurePAWPOC1SAKey2')]",
+    "secretnameSASurl": "[parameters('AzurePAWPOC1SAS')]",
     "secretsKeyVaultRG": "[parameters('secretsKeyVaultRG')]",
     "secretskeyVaultID": "[concat('/subscriptions/', parameters('subscriptionID'), '/resourceGroups/', variables('secretsKeyVaultRG'), '/providers/Microsoft.KeyVault/vaults/', variables('secretsVaultName'))]",
     "CertForADFS": "[concat('https://', parameters('secretsVaultName'), '.vault.azure.net:443/secrets/', parameters('ADFSCertID'))]",
 
-    "adfsAvailabilitySetName": "adfsAvailabiltySet",
+    "adfsAvailabilitySetName": "[parameters('adfsAvailabiltySet')]",
 
+    "OSVersion": "2016-Datacenter",
     "imageOffer": "WindowsServer",
     "imagePublisher": "MicrosoftWindowsServer",
 
-    "ilbADFSName": "[concat('ilbADFS',resourceGroup().name)]",
+    "ilbADFSName": "[concat(parameters('ilbADFSName'),'-',resourceGroup().name)]",
     "ilbADFSID": "[resourceId('Microsoft.Network/loadBalancers',variables('ilbADFSName'))]",
 
-    "adfsNICName": "[concat('ADFS-Nic',resourceGroup().name)]",
-    "adfs2NICName": "[concat('ADFS2-Nic',resourceGroup().name)]",
+    "adfsNICName": "[concat(parameters('adfs1VMName'),'-Nic',resourceGroup().name)]",
+    "adfs2NICName": "[concat(parameters('adfs2VMName'),'-Nic',resourceGroup().name)]",
 
     "diagnosticsAccountid": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/',parameters('StorageAccountRG'), '/providers/','Microsoft.Storage/storageAccounts/', parameters('diagnosticsStorageAccountName'))]"
-
   },
   "resources": [
     {
