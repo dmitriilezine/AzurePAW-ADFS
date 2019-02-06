@@ -88,8 +88,7 @@
       "allowedValues": [
         "Standard_DS12_v2",
         "Standard_DS2_v2",
-        "Standard_D8S_v3",
-        "Standard_A2"
+        "Standard_D8S_v3"
       ],
       "metadata": {
         "description": "VM Size. The bigger it is, the more $ you will spend."
