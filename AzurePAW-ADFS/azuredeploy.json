@@ -57,20 +57,13 @@
         "description": "Name of the subnet in the virtual network you want to put this VM"
       }
     },
-    "subscriptionID": {
-      "type": "string",
-      "metadata": {
-        "description": "Subscription ID is used to provide access path to the Key Vault with secrets to access deployment scripts"
-      },
-      "defaultValue": "Subscription ID for Secrets Key Vault that provide access to the deployment scripts."
-    },
-    "secretsVaultName": {
+    "DepSecretsVaultName": {
       "type": "string",
       "metadata": {
         "description": "The name of the Key Vault where secrets are stored"
       }
     },
-    "secretsKeyVaultRG": {
+    "DepSecretsKeyVaultRG": {
       "type": "string",
       "metadata": {
         "description": "The name of the RG where Secrets Key Vault is stored"
@@ -171,20 +164,6 @@
         "description": "ADE Key Vault RG"
       }
     },
-    "AzurePAWPOC1SAKey2": {
-      "type": "string",
-      "metadata": {
-        "description": "Name of the secret in the Secrets Key Vault which contains key for SA"
-      },
-      "defaultValue": "AzurePAWPOC1SAKey2"
-    },
-    "AzurePAWPOC1SAS": {
-      "type": "string",
-      "metadata": {
-        "description": "Name of the secret in the Secrets Key Vault which contains SAS for SA"
-      },
-      "defaultValue": "AzurePAWPOC1SAS"
-    },
     "adfsAvailabiltySet": {
       "type": "string",
       "metadata": {
@@ -197,7 +176,40 @@
       "metadata": {
         "description": "Name for ADFS ILB"
       },
-      "defaultValue": "ilbADFSName"
+      "defaultValue": "ilbADFS"
+    },
+    "subscriptionID": {
+      "type": "string",
+      "metadata": {
+        "description": "Subscription ID is used to provide access path to the Secrets Key Vault"
+      },
+      "defaultValue": "Subscription ID for Secrets Key Vault that provide access to the deployment scripts."
+    },
+    "saSecretsVaultName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the Key Vault where secrets are stored for accessing deployment scripts"
+      }
+    },
+    "saSecretsKeyVaultRG": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the RG where Secrets Key Vault is stored"
+      }
+    },
+    "saSecretKeyName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the secret that holds key for Storage account"
+      },
+      "defaultValue": "AzurePAWPOC1SAKey2"
+    },
+    "saSecretSASName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the secret that holds SAS for Storage account"
+      },
+      "defaultValue": "AzurePAWPOC1SAS"
     }
   },
   "variables": {
@@ -260,12 +272,18 @@
     "configurationFunctionDSConADFSvm1": "DeployADFS.ps1\\InstallADFSFarm",
     "configurationFunctionDSConADFSvm2": "DeployADFS.ps1\\InstallADFSFarmonADFSvm2",
 
-    "secretsVaultName": "[parameters('secretsVaultName')]",
-    "secretName": "[parameters('AzurePAWPOC1SAKey2')]",
-    "secretnameSASurl": "[parameters('AzurePAWPOC1SAS')]",
-    "secretsKeyVaultRG": "[parameters('secretsKeyVaultRG')]",
+
+    "DepSecretsVaultName": "[parameters('DepSecretsVaultName')]",
+    "DepSecretsKeyVaultRG": "[parameters('DepSecretsKeyVaultRG')]",
+    "DepSecretskeyVaultID": "[concat('/subscriptions/', parameters('subscriptionID'), '/resourceGroups/', variables('DepSecretsKeyVaultRG'), '/providers/Microsoft.KeyVault/vaults/', variables('DepSecretsVaultName'))]",
+    "CertForADFS": "[concat('https://', parameters('DepSecretsVaultName'), '.vault.azure.net:443/secrets/', parameters('ADFSCertID'))]",
+    
+    "secretsVaultName": "[parameters('saSecretsVaultName')]",
+    "secretName": "[parameters('saSecretKeyName')]",
+    "secretnameSASurl": "[parameters('saSecretSASName')]",
+    "secretsKeyVaultRG": "[parameters('saSecretsKeyVaultRG')]",
     "secretskeyVaultID": "[concat('/subscriptions/', parameters('subscriptionID'), '/resourceGroups/', variables('secretsKeyVaultRG'), '/providers/Microsoft.KeyVault/vaults/', variables('secretsVaultName'))]",
-    "CertForADFS": "[concat('https://', parameters('secretsVaultName'), '.vault.azure.net:443/secrets/', parameters('ADFSCertID'))]",
+
 
     "adfsAvailabilitySetName": "[parameters('adfsAvailabiltySet')]",
 
@@ -358,7 +376,7 @@
             "value": "[variables('adfsAvailabilitySetName')]"
           },
           "keyVaultID": {
-            "value": "[variables('secretskeyVaultID')]"
+            "value": "[variables('DepSecretskeyVaultID')]"
           },
           "CertForADFS": {
             "value": "[variables('CertForADFS')]"
@@ -422,7 +440,7 @@
             "value": "[variables('adfsAvailabilitySetName')]"
           },
           "keyVaultID": {
-            "value": "[variables('secretskeyVaultID')]"
+            "value": "[variables('DepSecretskeyVaultID')]"
           },
           "CertForADFS": {
             "value": "[variables('CertForADFS')]"
