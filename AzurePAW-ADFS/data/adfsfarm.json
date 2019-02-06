@@ -77,7 +77,7 @@
     }
   },
   "variables": {
-    "primaryADFSServerDNS": "[concat(parameters('primaryADFSserver'),'.',parameters('domainName'))]",
+    "primaryADFSServerDNSName": "[concat(parameters('primaryADFSserver'),'.',parameters('domainName'))]",
     "shortDomainName": "[split(parameters('domainName'),'.')[0]]",
     "domainSuffix": "[split(parameters('domainName'),'.')[1]]",
     "CACommonName": "[concat(variables('shortDomainName'),' CA')]",
@@ -111,7 +111,7 @@
             "ADFSServiceCert": "[parameters('ADFSServiceCert')]",
             "TargetDIADOU": "[variables('TargetDIADOU')]",
             "ComputerDN": "[variables('ComputerDN')]",
-            "PrimaryADFSServer": "[variables('primaryADFSServerDNS')]",
+            "PrimaryADFSServer": "[variables('primaryADFSServerDNSName')]",
             "adminCreds": {
               "userName": "[parameters('adminUserName')]",
               "password": "PrivateSettingsRef:adminPassword"
